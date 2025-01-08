@@ -4,10 +4,10 @@ object Tile {
   private var array: Array[Array[Tile]] = Array.ofDim(0)
   private var width: Int = -1
   private var height: Int = -1
+  private var bombCount: Int = -1
 
   def getArray(): Array[Array[Tile]] = array
   def getArray(row: Int): Array[Tile] = array(row)
-
   def getBombsAround(x: Int, y: Int): Int = {
     var bombNum: Int = 0
 
@@ -32,10 +32,10 @@ object Tile {
 
     bombNum
   }
-
   def startupTiles(w: Int, h: Int, bombs: Int): Unit = {
     this.width = w
     this.height = h
+    this.bombCount = bombs
     val bombPos: Array[Int] = Array.fill(bombs)(-1) // Array[Int] of size bombs filled with -1
     val numOfTiles: Int = width * height
 
@@ -57,7 +57,22 @@ object Tile {
       }
     }
   }
-
+  /**
+   * Returns remaining flags => Total bombs - used flags
+   * @return Remaining flags
+   */
+  def getRemainingFlags(): Int = {
+    var count = bombCount
+    for (i <- array.indices) {
+      for (j <- array(i).indices) {
+        if (array(i)(j).isFlagged()) count -= 1
+      }
+    }
+    count
+  }
+  /**
+   * Used exclusively for Tile array debugging
+   */
   def showArrayInConsole(): Unit = {
     var str: String = ""
     var bombCount: Int = 0
@@ -78,6 +93,20 @@ object Tile {
     }
     println(str)
     println("Bombcount : " + bombCount)
+  }
+  def checkIfWon(): Boolean = {
+    if (getRemainingFlags() != 0) return false
+
+    // Are any tiles hidden ?
+    for (i <- array.indices) {
+      for (j <- array(i).indices) {
+        if (!array(i)(j).isBomb() && array(i)(j).isHidden()) return false
+      }
+    }
+
+    // All non-bomb tiles are not hidden + All flags used
+    // Means that the player won the game
+    true
   }
 }
 
