@@ -17,8 +17,7 @@ object Tile {
   private var height: Int = -1
   private var bombCount: Int = -1
 
-  def getArray(): Array[Array[Tile]] = array
-  def getArray(row: Int): Array[Tile] = array(row)
+  def getArray: Array[Array[Tile]] = array
   private def getXAround(x: Int, y: Int, aroundtype: AroundType): Int = {
     var count: Int = 0
 
@@ -43,13 +42,15 @@ object Tile {
 
     count
   }
-  def getBombsAround(x: Int, y: Int): Int = getXAround(x,y,AroundType.Bomb)
+  def getBombsAround(x: Int, y: Int): Int = {
+    if (Tile.getArray(x)(y).isBomb()) return -1
+    getXAround(x,y,AroundType.Bomb)
+  }
   def getFlagsAround(x: Int, y: Int): Int = getXAround(x,y,AroundType.Flag)
-  //def getFlagsAround(x: Int, y: Int)
   def startupTiles(w: Int, h: Int, bombs: Int): Unit = {
     this.width = w
     this.height = h
-    this.bombCount = bombs
+    this.bombCount = if (bombs > w * h) w * h else bombs
     val bombPos: Array[Int] = Array.fill(bombs)(-1) // Array[Int] of size bombs filled with -1
     val numOfTiles: Int = width * height
 
@@ -91,7 +92,7 @@ object Tile {
     var str: String = ""
     var bombCount: Int = 0
 
-    for(i <- Tile.getArray().indices) {
+    for(i <- Tile.getArray.indices) {
       for (j <- Tile.getArray(i).indices) {
         if (Tile.getArray(i)(j).isBomb()) {
           str += "X"
@@ -145,6 +146,8 @@ class Tile(val x: Int, val y: Int, typeOfTile: TileType) {
    */
   def toggleFlag(): Boolean = {
     flagged = !flagged
+    if (flagged) Window.setFlag(x, y)
+    else Window.removeFlag(x, y)
     flagged
   }
   /**
@@ -153,6 +156,7 @@ class Tile(val x: Int, val y: Int, typeOfTile: TileType) {
    */
   def show(): Boolean = {
     hidden = false
+    Window.unHideSquare(x,y)
     isBomb()
   }
   def is(at: AroundType): Boolean = {
@@ -167,7 +171,7 @@ class Tile(val x: Int, val y: Int, typeOfTile: TileType) {
   def leftclick(): Boolean = {
     // TODO : add integration with frontend -> click flags or unhides, etc.
     // if click flagged tile, nothing happens
-    if (flagged) return true
+    if (flagged || !hidden) return true
     // from now on, we are certain the tile isn't flagged
     // on click of unflagged bomb, end game
     this.show()
@@ -210,7 +214,8 @@ class Tile(val x: Int, val y: Int, typeOfTile: TileType) {
    * If is flagged : removes it
    */
   def rightclick(): Unit = {
-    if (flagged) if (Tile.getRemainingFlags() > 0) toggleFlag()
-    else toggleFlag()
+    if (!hidden) return;
+    if (!flagged && Tile.getRemainingFlags() == 0) return
+    this.toggleFlag()
   }
 }
