@@ -13,3 +13,6 @@ Tile class would have three variables inside :
 On every user's click, the graphical interface is updated. Checks every element in the array and displays it accordingly. \
 When every bomb has been flagged, and every non-bomb tile is !hidden, end game. \
 If the user clicks an unflagged bomb, the game ends as well.
+
+## Fungraphic 
+Version 1.5.15
