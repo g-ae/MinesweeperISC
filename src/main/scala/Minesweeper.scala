@@ -9,5 +9,4 @@ object Minesweeper extends App {
   Window.createScreen(800, 460)
   Window.createSquares()
   Window.createBigBorder(3, 51, 6, 0)
-
 }

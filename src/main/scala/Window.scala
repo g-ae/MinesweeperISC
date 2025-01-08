@@ -6,9 +6,14 @@ import java.awt.Color
 object Window {
   //Par defaut 800/ 460
   private var screen : FunGraphics = _
-  var carrex = 30
-  var carrey = 15
+  var carrex = 30   //Default number of square on x
+  var carrey = 15   //Default number of square on y
 
+  /**
+   * Fonction that init the window
+   * @param x width of the window
+   * @param y heigh of the window
+   */
   def createScreen(x : Int, y : Int): Unit = {
     screen = new FunGraphics(x , y)
     Window.screen.clear(Color.black)
@@ -50,6 +55,31 @@ object Window {
 
       if(yi > ((esp-1) - xi)) Window.screen.setPixel(x2 + xi, y + yi, light) else Window.screen.setPixel(x2 + xi, y + yi, dark)
     }
+  }
+
+  def getTileFromCoords(x : Int, y : Int): Array[Int] = {
+    var extx : Int = (26 * carrex) + 9
+    var exty : Int = (26 * carrey) + 57
+    var dx = 0 ; var dy = 0
+    var x2 = x - 9 ; var y2 = y - 57
+
+    // valeur de x dans le tableau
+    if (8 < x  && x < extx) {
+      var restex = x2 % 26
+      dx = ((x2 - restex) / 26)
+    }
+    else dx = -1
+
+    // valeur de y dans le tableau
+    if (56 < y && y < exty){
+      var restey = y2 % 26
+      dy = ((y2 - restey)/ 26)
+    }
+    else dy = -1
+
+    Array(dx , dy)
+
+
   }
 
 
