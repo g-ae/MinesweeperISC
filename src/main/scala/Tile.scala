@@ -204,4 +204,13 @@ class Tile(val x: Int, val y: Int, typeOfTile: TileType) {
 
     keepPlaying
   }
+
+  /**
+   * If isn't flagged : checks if there is still at least 1 flag left. In that case, flags the current tile, else does nothing.
+   * If is flagged : removes it
+   */
+  def rightclick(): Unit = {
+    if (flagged) if (Tile.getRemainingFlags() > 0) toggleFlag()
+    else toggleFlag()
+  }
 }
