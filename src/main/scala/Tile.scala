@@ -146,7 +146,7 @@ class Tile(val x: Int, val y: Int, typeOfTile: TileType) {
    */
   def toggleFlag(): Boolean = {
     flagged = !flagged
-    if (flagged) Window.setFlag(x, y)
+    if (flagged) Window.drawFlag(x, y)
     else Window.removeFlag(x, y)
     flagged
   }
@@ -169,24 +169,30 @@ class Tile(val x: Int, val y: Int, typeOfTile: TileType) {
    * @return Game still going, on a "false" return : game is over
    */
   def leftclick(): Boolean = {
-    // TODO : add integration with frontend -> click flags or unhides, etc.
     // if click flagged tile, nothing happens
     if (flagged || !hidden) return true
+    /*if (!hidden) {
+      return checkFlagsBombsAround()
+    }*/
     // from now on, we are certain the tile isn't flagged
     // on click of unflagged bomb, end game
     this.show()
 
-    if (typeOfTile == TileType.Bomb) false
-    else if (typeOfTile == TileType.Empty) {
-      val bombsAround: Int = Tile.getBombsAround(x,y)
-      val flagsAround: Int = Tile.getFlagsAround(x,y)
+    if (typeOfTile == TileType.Bomb) return false
+    else if (typeOfTile == TileType.Empty) if (!checkFlagsBombsAround()) return false
 
-      if (bombsAround == flagsAround) if (!leftclickEveryTileAround(x,y)) return false
-      // else
-      true
-    } else true
+    true
   }
-  private def leftclickEveryTileAround(x:Int,y:Int): Boolean = {
+  private def checkFlagsBombsAround(): Boolean = {
+    val bombsAround: Int = Tile.getBombsAround(x,y)
+    val flagsAround: Int = Tile.getFlagsAround(x,y)
+
+    println(bombsAround, flagsAround)
+    if (bombsAround == flagsAround) if (!leftclickEveryTileAround()) return false
+
+    true
+  }
+  private def leftclickEveryTileAround(): Boolean = {
     var keepPlaying: Boolean = true
 
     if (x > 0) {
