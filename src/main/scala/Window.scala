@@ -95,7 +95,17 @@ object Window {
   def drawFlag(x : Int, y: Int): Unit = {
     // TODO : Change flag visual style (currently a red rectangle)
     screen.setColor(Color.red)
-    screen.drawFillRect(getRealXFromArrayIndex(x)+5,getRealYFromArrayIndex(y)+5,10,10)
+    //the flag
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 12,getRealYFromArrayIndex(y)+4,3,2)
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 12,getRealYFromArrayIndex(y)+11,3,2)
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 9,getRealYFromArrayIndex(y)+6,6,2)
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 9,getRealYFromArrayIndex(y)+9,6,2)
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 7,getRealYFromArrayIndex(y)+8,8,1)
+    // The stick
+    screen.setColor(Color.black)
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 13,getRealYFromArrayIndex(y)+13,2,3)
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 9,getRealYFromArrayIndex(y)+16,8,2)
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 7,getRealYFromArrayIndex(y)+18,12,4)
   }
 
   /**
