@@ -16,7 +16,7 @@ object Window {
    * @param y heigh of the window
    */
   def createScreen(x : Int, y : Int): Unit = {
-    screen = new FunGraphics(x , y)
+    screen = new FunGraphics(x, y, "MinesweeperISC")
     // Mouse listener -> listens for mouse clicks
     screen.addMouseListener(new MouseAdapter {
       override def mouseClicked(e: MouseEvent): Unit = mouseClickInGame(e)
@@ -92,19 +92,21 @@ object Window {
    * @param y array index Y
    */
   def drawFlag(x : Int, y: Int): Unit = {
-    println("drew flag at ",x,y)
+    val realX: Int = getRealXFromArrayIndex(x)
+    val realY: Int = getRealYFromArrayIndex(y)
+
     screen.setColor(Color.red)
     //the flag
-    screen.drawFillRect(getRealXFromArrayIndex(x)+ 12,getRealYFromArrayIndex(y)+4,3,2)
-    screen.drawFillRect(getRealXFromArrayIndex(x)+ 12,getRealYFromArrayIndex(y)+11,3,2)
-    screen.drawFillRect(getRealXFromArrayIndex(x)+ 9,getRealYFromArrayIndex(y)+6,6,2)
-    screen.drawFillRect(getRealXFromArrayIndex(x)+ 9,getRealYFromArrayIndex(y)+9,6,2)
-    screen.drawFillRect(getRealXFromArrayIndex(x)+ 7,getRealYFromArrayIndex(y)+8,8,1)
+    screen.drawFillRect(realX + 12, realY + 4, 3, 2)
+    screen.drawFillRect(realX + 12, realY + 11, 3, 2)
+    screen.drawFillRect(realX + 9, realY + 6, 6, 2)
+    screen.drawFillRect(realX + 9, realY + 9, 6, 2)
+    screen.drawFillRect(realX + 7, realY + 8, 8, 1)
     // The stick
     screen.setColor(Color.black)
-    screen.drawFillRect(getRealXFromArrayIndex(x)+ 13,getRealYFromArrayIndex(y)+13,2,3)
-    screen.drawFillRect(getRealXFromArrayIndex(x)+ 9,getRealYFromArrayIndex(y)+16,8,2)
-    screen.drawFillRect(getRealXFromArrayIndex(x)+ 7,getRealYFromArrayIndex(y)+18,12,4)
+    screen.drawFillRect(realX + 13, realY + 13, 2, 3)
+    screen.drawFillRect(realX + 9, realY + 16, 8, 2)
+    screen.drawFillRect(realX + 7, realY + 18, 12, 4)
   }
 
   /**
@@ -114,7 +116,7 @@ object Window {
    */
   def removeFlag(x: Int, y: Int): Unit = {
     screen.setColor(Color.gray)
-    screen.drawFillRect(getRealXFromArrayIndex(x)+5,getRealYFromArrayIndex(y)+5,15,15)
+    screen.drawFillRect(getRealXFromArrayIndex(x)+4,getRealYFromArrayIndex(y)+4,18,18)
   }
   /**
    * Insert specified number at coordinates
