@@ -10,13 +10,13 @@ object Window {
   private val backgroundColor: Color = Color.white
   private val foregroundColor: Color = Color.black
   val inGameAdapter: MouseAdapter = new MouseAdapter {
-    override def mouseClicked(e: MouseEvent): Unit = mouseClickInGame(e)
+    override def mousePressed(e: MouseEvent): Unit = mouseClickInGame(e)
   }
   val menuAdapter: MouseAdapter = new MouseAdapter {
-    override def mouseClicked(e: MouseEvent): Unit = mouseClickMenu(e)
+    override def mousePressed(e: MouseEvent): Unit = mouseClickMenu(e)
   }
   val gameEndedAdapter: MouseAdapter = new MouseAdapter {
-    override def mouseClicked(e: MouseEvent): Unit = mouseClickGameEnded(e)
+    override def mousePressed(e: MouseEvent): Unit = mouseClickGameEnded(e)
   }
 
   var carrex = 30   //Default number of square on x
