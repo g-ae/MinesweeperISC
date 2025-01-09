@@ -8,9 +8,10 @@ object Minesweeper {
     // Tile array and bomb setup
     Window.carrex = width
     Window.carrey = height
-    Tile.startupTiles(width, height, bombs)
+    Tile.startupTiles(bombs)
 
     // Display game on user's screen
+    Window.clearScreen()
     Window.createSquares()
     Window.createBigBorder(3, 51, 6, 0)
   }
@@ -25,7 +26,8 @@ object Minesweeper {
     // Display game on user's screen
     Window.createScreen(800, 460)
 
-    // Default : 30, 15, 99
-    startGame(30, 15, 99)
+    Window.showMenu()
+    // Default : 30, 15, 90
+    //startGame(30, 15, 90)
   }
 }
