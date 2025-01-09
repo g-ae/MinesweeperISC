@@ -168,18 +168,22 @@ class Tile(val x: Int, val y: Int, typeOfTile: TileType) {
    * Standard action of clicking a tile
    * @return Game still going, on a "false" return : game is over
    */
-  def leftclick(): Boolean = {
+  def leftclick(manually: Boolean = false): Boolean = {
     // if click flagged tile, nothing happens
-    if (flagged || !hidden) return true
-    /*if (!hidden) {
-      return checkFlagsBombsAround()
-    }*/
+    if (flagged) return true
+
+    if (!hidden) {
+      if (manually) return checkFlagsBombsAround()
+      return true
+    }
     // from now on, we are certain the tile isn't flagged
     // on click of unflagged bomb, end game
     this.show()
 
     if (typeOfTile == TileType.Bomb) return false
-    else if (typeOfTile == TileType.Empty) if (!checkFlagsBombsAround()) return false
+    else if (typeOfTile == TileType.Empty) {
+      if (Tile.getBombsAround(x,y) == 0 && !checkFlagsBombsAround()) return false
+    }
 
     true
   }
@@ -187,7 +191,6 @@ class Tile(val x: Int, val y: Int, typeOfTile: TileType) {
     val bombsAround: Int = Tile.getBombsAround(x,y)
     val flagsAround: Int = Tile.getFlagsAround(x,y)
 
-    println(bombsAround, flagsAround)
     if (bombsAround == flagsAround) if (!leftclickEveryTileAround()) return false
 
     true

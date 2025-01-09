@@ -1,12 +1,30 @@
-object Minesweeper extends App {
-  Window.carrex = 30
-  Window.carrey = 15
+object Minesweeper {
+  private var gameRunning = true
 
-  // Tile array and bomb setup
-  Tile.startupTiles(Window.carrex, Window.carrey, 50)
+  def isGameRunning: Boolean = gameRunning
+  def startGame(width: Int, height: Int, bombs: Int): Unit = {
+    gameRunning = true
 
-  // Display game on user's screen
-  Window.createScreen(800, 460)
-  Window.createSquares()
-  Window.createBigBorder(3, 51, 6, 0)
+    // Tile array and bomb setup
+    Window.carrex = width
+    Window.carrey = height
+    Tile.startupTiles(width, height, bombs)
+
+    // Display game on user's screen
+    Window.createSquares()
+    Window.createBigBorder(3, 51, 6, 0)
+  }
+
+  def endGame(win: Boolean): Unit = {
+    Window.drawTextTop(if (win) "You won !" else "You lost")
+    gameRunning = false
+  }
+
+  def main(args: Array[String]): Unit = {
+    // Display game on user's screen
+    Window.createScreen(800, 460)
+
+    // Default : 30, 15, 99
+    startGame(30, 15, 99)
+  }
 }

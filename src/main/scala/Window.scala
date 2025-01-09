@@ -65,7 +65,7 @@ object Window {
   def unHideSquare(x: Int, y: Int): Unit = {
     val realX: Int = getRealXFromArrayIndex(x)
     val realY: Int = getRealYFromArrayIndex(y)
-    Window.screen.setColor(new Color(75,75,75))
+    Window.screen.setColor(Color.gray)
     Window.screen.drawFillRect(realX, realY, 26, 26)
     showNumAt(realX, realY, Tile.getBombsAround(x,y))
     Window.createBorder(realX, realY, realX + 25, realY + 25, 1, 0)
@@ -76,7 +76,7 @@ object Window {
    * @param y array index Y
    */
   def drawFlag(x : Int, y: Int): Unit = {
-    // TODO : Change flag visual style (currently a red rectangle)
+    println("drew flag at ",x,y)
     screen.setColor(Color.red)
     screen.drawFillRect(getRealXFromArrayIndex(x)+5,getRealYFromArrayIndex(y)+5,10,10)
   }
@@ -100,7 +100,7 @@ object Window {
     if (number == 0) return
     var str: String = number.toString
     if (number == -1) str = "X"
-    screen.drawString(x + 6, y + 20, str, Color.white, 24)
+    screen.drawString(x + 6, y + 20, str, getColorFromNumber(number), 24)
   }
 
   def getRealXFromArrayIndex(indexX: Int): Int = indexX * 26 + 9
@@ -134,6 +134,8 @@ object Window {
    * @param e MouseEvent
    */
   def mouseClickInGame(e: MouseEvent): Unit = {
+    if (!Minesweeper.isGameRunning) return
+
     val tileCoords: Array[Int] = getTileFromCoords(e.getX, e.getY)
     val tileX: Int = tileCoords(0)
     val tileY: Int = tileCoords(1)
@@ -141,18 +143,28 @@ object Window {
     // e.getButton -> LMB = 1, RMB = 3
     e.getButton match {
       case 1 =>
-        val clickResult = Tile.getArray(tileX)(tileY).leftclick()
-        if (!clickResult) {
-          println("You lost the game.")
-          // TODO : Prevent user from continuing pressing buttons (game is over)
-        }
+        val clickResult = Tile.getArray(tileX)(tileY).leftclick(true)
+        if (!clickResult) Minesweeper.endGame(false)
       case 3 =>
         Tile.getArray(tileX)(tileY).rightclick()
     }
     // check for win
-    if (Tile.checkIfWon()) {
-      println("You won the game !")
-      // TODO : Prevent user from continuing pressing buttons (game is over)
+    if (Tile.checkIfWon()) Minesweeper.endGame(true)
+  }
+  def getColorFromNumber(number: Int): Color = {
+    number match {
+      case 1 => Color.blue
+      case 2 => Color.green
+      case 3 => Color.red
+      case 4 => new Color(0,0,120)
+      case 5 => new Color(120,0,0)
+      case 6 => new Color(0,140,140)
+      case 7 => Color.black
+      case 8 => Color.darkGray
+      case _ => Color.black
     }
+  }
+  def drawTextTop(text: String): Unit = {
+    screen.drawString(10, 45, text, Color.white, 32)
   }
 }
