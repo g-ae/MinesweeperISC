@@ -13,8 +13,6 @@ private object AroundType extends Enumeration {
 
 object Tile {
   private var array: Array[Array[Tile]] = Array.ofDim(0)
-  private var width: Int = -1
-  private var height: Int = -1
   private var bombCount: Int = -1
 
   def getArray: Array[Array[Tile]] = array
@@ -26,18 +24,18 @@ object Tile {
     if (x > 0) {
       if (array(x-1)(y).is(aroundtype)) count += 1
       if (y > 0) if (array(x-1)(y-1).is(aroundtype)) count += 1
-      if (y < height - 1) if (array(x-1)(y+1).is(aroundtype)) count += 1
+      if (y < Window.carrey - 1) if (array(x-1)(y+1).is(aroundtype)) count += 1
     }
 
     // up/down
     if (y > 0) if (array(x)(y-1).is(aroundtype)) count += 1
-    if (y < height - 1) if (array(x)(y+1).is(aroundtype)) count += 1
+    if (y < Window.carrey - 1) if (array(x)(y+1).is(aroundtype)) count += 1
 
     // right
-    if (x < width - 1) {
+    if (x < Window.carrex - 1) {
       if (array(x+1)(y).is(aroundtype)) count += 1
       if (y > 0) if (array(x+1)(y-1).is(aroundtype)) count += 1
-      if (y < height - 1) if (array(x+1)(y+1).is(aroundtype)) count += 1
+      if (y < Window.carrey - 1) if (array(x+1)(y+1).is(aroundtype)) count += 1
     }
 
     count
@@ -47,12 +45,10 @@ object Tile {
     getXAround(x,y,AroundType.Bomb)
   }
   def getFlagsAround(x: Int, y: Int): Int = getXAround(x,y,AroundType.Flag)
-  def startupTiles(w: Int, h: Int, bombs: Int): Unit = {
-    this.width = w
-    this.height = h
-    this.bombCount = if (bombs > w * h) w * h else bombs
+  def startupTiles(bombs: Int): Unit = {
+    this.bombCount = if (bombs > Window.carrex * Window.carrey) Window.carrex * Window.carrey else bombs
     val bombPos: Array[Int] = Array.fill(bombs)(-1) // Array[Int] of size bombs filled with -1
-    val numOfTiles: Int = width * height
+    val numOfTiles: Int = Window.carrex * Window.carrey
 
     // random positions for bombs
     for(i <- bombPos.indices) {
@@ -64,10 +60,10 @@ object Tile {
     }
 
     // Array creation
-    array = Array.ofDim(width, height)
+    array = Array.ofDim(Window.carrex, Window.carrey)
     for(x <- array.indices) {
       for (y <- array(x).indices) {
-        val isBomb: Boolean = bombPos.contains(width * y + x)
+        val isBomb: Boolean = bombPos.contains(Window.carrex * y + x)
         array(x)(y) = new Tile(x,y,if (isBomb) TileType.Bomb else TileType.Empty)
       }
     }
@@ -168,18 +164,22 @@ class Tile(val x: Int, val y: Int, typeOfTile: TileType) {
    * Standard action of clicking a tile
    * @return Game still going, on a "false" return : game is over
    */
-  def leftclick(): Boolean = {
+  def leftclick(manually: Boolean = false): Boolean = {
     // if click flagged tile, nothing happens
-    if (flagged || !hidden) return true
-    /*if (!hidden) {
-      return checkFlagsBombsAround()
-    }*/
+    if (flagged) return true
+
+    if (!hidden) {
+      if (manually) return checkFlagsBombsAround()
+      return true
+    }
     // from now on, we are certain the tile isn't flagged
     // on click of unflagged bomb, end game
     this.show()
 
     if (typeOfTile == TileType.Bomb) return false
-    else if (typeOfTile == TileType.Empty) if (!checkFlagsBombsAround()) return false
+    else if (typeOfTile == TileType.Empty) {
+      if (Tile.getBombsAround(x,y) == 0 && !checkFlagsBombsAround()) return false
+    }
 
     true
   }
@@ -187,7 +187,6 @@ class Tile(val x: Int, val y: Int, typeOfTile: TileType) {
     val bombsAround: Int = Tile.getBombsAround(x,y)
     val flagsAround: Int = Tile.getFlagsAround(x,y)
 
-    println(bombsAround, flagsAround)
     if (bombsAround == flagsAround) if (!leftclickEveryTileAround()) return false
 
     true
@@ -198,18 +197,18 @@ class Tile(val x: Int, val y: Int, typeOfTile: TileType) {
     if (x > 0) {
       if (!Tile.getArray(x-1)(y).leftclick()) keepPlaying = false
       if (y > 0) if (!Tile.getArray(x-1)(y-1).leftclick()) keepPlaying = false
-      if (y < Tile.height - 1) if (!Tile.getArray(x-1)(y+1).leftclick()) keepPlaying = false
+      if (y < Window.carrey - 1) if (!Tile.getArray(x-1)(y+1).leftclick()) keepPlaying = false
     }
 
     // up/down
     if (y > 0) if (!Tile.getArray(x)(y-1).leftclick()) keepPlaying = false
-    if (y < Tile.height - 1) if (!Tile.getArray(x)(y+1).leftclick()) keepPlaying = false
+    if (y < Window.carrey - 1) if (!Tile.getArray(x)(y+1).leftclick()) keepPlaying = false
 
     // right
-    if (x < Tile.width - 1) {
+    if (x < Window.carrex - 1) {
       if (!Tile.getArray(x+1)(y).leftclick()) keepPlaying = false
       if (y > 0) if (!Tile.getArray(x+1)(y-1).leftclick()) keepPlaying = false
-      if (y < Tile.height - 1) if (!Tile.getArray(x+1)(y+1).leftclick()) keepPlaying = false
+      if (y < Window.carrey - 1) if (!Tile.getArray(x+1)(y+1).leftclick()) keepPlaying = false
     }
 
     keepPlaying
@@ -220,7 +219,7 @@ class Tile(val x: Int, val y: Int, typeOfTile: TileType) {
    * If is flagged : removes it
    */
   def rightclick(): Unit = {
-    if (!hidden) return;
+    if (!hidden) return
     if (!flagged && Tile.getRemainingFlags() == 0) return
     this.toggleFlag()
   }
