@@ -11,7 +11,7 @@ object Window {
   var carrey = 15   //Default number of square on y
 
   /**
-   * Fonction that init the window
+   * Function that init the window
    * @param x width of the window
    * @param y heigh of the window
    */
@@ -23,21 +23,37 @@ object Window {
     })
     Window.screen.clear(Color.black)
   }
+
+  /**
+   * Function that create all the tiles
+   */
   def createSquares(): Unit ={
     var x = ((carrex - 1)* 26) + 12 ; var y = ((carrey-1)* 26)+ 60
+
+    // creates the inside of the tile
     for(i <- 12 to x by 26;
         j <- 60 to y by 26){
       Window.screen.setColor(Color.gray)
       screen.drawFillRect(i , j, 20 , 20)
     }
 
+    // creates the borders of the tile
     var xi = ((carrex - 1)* 26) + 9 ; var yi = ((carrey-1)* 26)+ 57
     for(x <- 9 to xi by 26;
         y <- 57 to yi by 26){
       createBorder(x, y, x + 25, y + 25, 3, 1)
     }
   }
+
+  /**
+   * Create the Main border of the little tiles
+   * @param x value of the pixel on the top right (x)
+   * @param y value of the pixel on the top right (y)
+   * @param esp the width of the border
+   * @param inv 0 for the up/left border darkGray and else for lightGray
+   */
   def createBigBorder(x : Int, y: Int, esp: Int, inv : Int): Unit = createBorder(x, y,(carrex * 26) + x + 11, (carrey * 26) + y + 11, esp, inv)
+
   def createBorder(x : Int, y : Int, xf : Int, yf : Int, esp : Int, inv : Int): Unit = {
     val wx = xf + 1 - x - esp ; val xesp = x + esp ; val x2 = xf + 1 - esp
     val wy = yf + 1 - y - esp ; val yesp = y + esp ; val y2 = yf + 1 - esp
@@ -78,7 +94,17 @@ object Window {
   def drawFlag(x : Int, y: Int): Unit = {
     println("drew flag at ",x,y)
     screen.setColor(Color.red)
-    screen.drawFillRect(getRealXFromArrayIndex(x)+5,getRealYFromArrayIndex(y)+5,10,10)
+    //the flag
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 12,getRealYFromArrayIndex(y)+4,3,2)
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 12,getRealYFromArrayIndex(y)+11,3,2)
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 9,getRealYFromArrayIndex(y)+6,6,2)
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 9,getRealYFromArrayIndex(y)+9,6,2)
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 7,getRealYFromArrayIndex(y)+8,8,1)
+    // The stick
+    screen.setColor(Color.black)
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 13,getRealYFromArrayIndex(y)+13,2,3)
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 9,getRealYFromArrayIndex(y)+16,8,2)
+    screen.drawFillRect(getRealXFromArrayIndex(x)+ 7,getRealYFromArrayIndex(y)+18,12,4)
   }
 
   /**
