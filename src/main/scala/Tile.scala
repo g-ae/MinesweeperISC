@@ -1,6 +1,5 @@
 import AroundType.AroundType
 import TileType.TileType
-
 import scala.util.Random
 
 /**

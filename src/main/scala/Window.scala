@@ -118,6 +118,17 @@ object Window {
     screen.drawFillRect(realX + 13, realY + 13, 2, 3)
     screen.drawFillRect(realX + 9, realY + 16, 8, 2)
     screen.drawFillRect(realX + 7, realY + 18, 12, 4)
+
+    drawRemainingFlags()
+  }
+
+  /**
+   * Flag count top of screen
+   */
+  def drawRemainingFlags(): Unit = {
+    screen.setColor(Window.backgroundColor)
+    screen.drawFillRect(299, 0, 150, 50)
+    screen.drawString(300, 45, Tile.getRemainingFlags().toString, Color.red, 32)
   }
 
   /**
@@ -128,6 +139,8 @@ object Window {
   def removeFlag(x: Int, y: Int): Unit = {
     screen.setColor(Color.gray)
     screen.drawFillRect(getRealXFromArrayIndex(x)+4,getRealYFromArrayIndex(y)+4,18,18)
+
+    drawRemainingFlags()
   }
   /**
    * Insert specified number at coordinates

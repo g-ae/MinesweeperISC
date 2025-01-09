@@ -9,6 +9,7 @@ object Minesweeper {
     Window.clearScreen()
     Window.createSquares()
     Window.createBigBorder(3, 51, 6, 0)
+    Window.drawRemainingFlags()
   }
 
   def endGame(win: Boolean): Unit = {
