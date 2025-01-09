@@ -183,5 +183,46 @@ object Window {
     }
   }
 
+  def draw_bomb(x : Int, y : Int): Unit ={
+    var realx = getRealXFromArrayIndex(x) ; var realy = getRealYFromArrayIndex(y)
+    //base of the bomb
+    screen.setColor(Color.black)
+    screen.drawFillRect(realx + 7, realy + 13, 7, 10)
+    screen.drawFillRect(realx + 6, realy + 14, 9, 8)
+    screen.drawFillRect(realx + 5, realy + 15, 11, 6)
+    screen.drawFillRect(realx + 9, realy + 11, 3, 2)
+    //fuse of the bomb
+    screen.drawFillRect(realx + 10, realy + 9, 1,2)
+    screen.setPixel(realx + 11, realy + 8)
+    screen.drawFillRect(realx + 12, realy + 7, 2,1)
+    screen.drawFillRect(realx + 18, realy + 7, 3,1)
+    screen.setPixel(realx + 16, realy + 4)
+    screen.setPixel(realx + 17, realy + 3)
+    screen.setPixel(realx + 16, realy + 10)
+    screen.setPixel(realx + 17, realy + 11)
+    //reflect of the bomb
+    screen.setColor(Color.gray)
+    screen.drawFillRect(realx + 6, realy + 18, 1, 2)
+    screen.setPixel(realx + 7, realy + 20)
+    screen.setPixel(realx + 8, realy + 21)
+    screen.setPixel(realx + 11, realy + 14)
+    screen.setPixel(realx + 12, realy + 15)
+    screen.drawFillRect(realx + 13, realy + 15, 1, 2)
+    screen.drawFillRect(realx + 14, realy + 16, 1, 4)
+    screen.setPixel(realx + 20, realy + 13)
+    //flame of the bomb
+    screen.setColor(Color.orange)
+    screen.drawFillRect(realx + 14, realy + 6, 2, 3)
+    screen.setColor(Color.red)
+    screen.setPixel(realx + 13, realy + 6)
+    screen.setPixel(realx + 14, realy + 5)
+    screen.setPixel(realx + 15, realy + 6)
+    screen.setPixel(realx + 16, realy + 7)
+    screen.setPixel(realx + 15, realy + 8)
+    screen.setPixel(realx + 14, realy + 9)
+    screen.setPixel(realx + 13, realy + 8)
+    screen.setPixel(realx + 14, realy + 7, Color.yellow)
+  }
+
 
 }
