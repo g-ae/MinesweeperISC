@@ -193,4 +193,15 @@ object Window {
   def drawTextTop(text: String): Unit = {
     screen.drawString(10, 45, text, Color.white, 32)
   }
+
+  /**
+   * Clicks all bombs (used on game lost)
+   */
+  def showAllBombs(): Unit = {
+    for(i <- Tile.getArray.indices) {
+      for (tile <- Tile.getArray(i)) {
+        if (tile.isBomb()) tile.leftclick()
+      }
+    }
+  }
 }

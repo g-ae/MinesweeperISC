@@ -17,6 +17,7 @@ object Minesweeper {
 
   def endGame(win: Boolean): Unit = {
     Window.drawTextTop(if (win) "You won !" else "You lost")
+    Window.showAllBombs()
     gameRunning = false
   }
 
