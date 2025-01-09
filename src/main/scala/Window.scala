@@ -2,7 +2,7 @@
 import hevs.graphics.FunGraphics
 
 import java.awt.Color
-import java.awt.event.{MouseAdapter, MouseEvent}
+import java.awt.event.{MouseAdapter, MouseEvent, MouseListener}
 
 object Window {
   //Par defaut 800/ 460
@@ -14,6 +14,9 @@ object Window {
   }
   val menuAdapter: MouseAdapter = new MouseAdapter {
     override def mouseClicked(e: MouseEvent): Unit = mouseClickMenu(e)
+  }
+  val gameEndedAdapter: MouseAdapter = new MouseAdapter {
+    override def mouseClicked(e: MouseEvent): Unit = mouseClickGameEnded(e)
   }
 
   var carrex = 30   //Default number of square on x
@@ -170,8 +173,6 @@ object Window {
    * @param e MouseEvent
    */
   def mouseClickInGame(e: MouseEvent): Unit = {
-    if (!Minesweeper.isGameRunning) return
-
     val tileCoords: Array[Int] = getTileFromCoords(e.getX, e.getY)
     val tileX: Int = tileCoords(0)
     val tileY: Int = tileCoords(1)
@@ -270,5 +271,21 @@ object Window {
       Minesweeper.startGame(30,15,90)
       screen.mainFrame.getContentPane.addMouseListener(Window.inGameAdapter)
     }
+  }
+
+  /**
+   * Remove in-game clicks and add new button
+   */
+  def gameEnded(): Unit = {
+    screen.mainFrame.getContentPane.removeMouseListener(Window.inGameAdapter)
+    Window.drawButton(700,10,90,40,"Replay")
+    screen.mainFrame.getContentPane.addMouseListener(Window.gameEndedAdapter)
+  }
+
+  def mouseClickGameEnded(e: MouseEvent): Unit = {
+    if (e.getX < 700 || e.getX > 790 || e.getY < 10 || e.getY > 50) return
+
+    screen.mainFrame.getContentPane.removeMouseListener(Window.gameEndedAdapter)
+    Window.showMenu()
   }
 }

@@ -1,10 +1,5 @@
 object Minesweeper {
-  private var gameRunning = true
-
-  def isGameRunning: Boolean = gameRunning
   def startGame(width: Int, height: Int, bombs: Int): Unit = {
-    gameRunning = true
-
     // Tile array and bomb setup
     Window.carrex = width
     Window.carrey = height
@@ -19,7 +14,7 @@ object Minesweeper {
   def endGame(win: Boolean): Unit = {
     Window.drawTextTop(if (win) "You won !" else "You lost")
     Window.showAllBombs()
-    gameRunning = false
+    Window.gameEnded()
   }
 
   def main(args: Array[String]): Unit = {
@@ -27,7 +22,5 @@ object Minesweeper {
     Window.createScreen(800, 460)
 
     Window.showMenu()
-    // Default : 30, 15, 90
-    //startGame(30, 15, 90)
   }
 }
