@@ -4,6 +4,7 @@ import scala.util.Random
 
 /**
  * Enum used for getXAround function
+ * Diffent enum from TileType because we want to be able to look for flags as well.
  */
 private object AroundType extends Enumeration {
   type AroundType = Value
@@ -11,10 +12,25 @@ private object AroundType extends Enumeration {
 }
 
 object Tile {
+  /**
+   * This array contains all the tiles from the current game. Everything is based around this.
+   * Private var but you can get it in other namespaces with Tile.getArray
+   */
   private var array: Array[Array[Tile]] = Array.ofDim(0)
   private var bombCount: Int = -1
 
+  /**
+   * Returns the Tile array that contains all the tiles from the current game
+   */
   def getArray: Array[Array[Tile]] = array
+
+  /**
+   * Private function used with getBombsAround and getFlagsAround as the base code for them is the same we just need to check for different types.
+   * @param x horizontal array index
+   * @param y vertical array index
+   * @param aroundtype uses "AroundType" enum to know what to check for
+   * @return
+   */
   private def getXAround(x: Int, y: Int, aroundtype: AroundType): Int = {
     var count: Int = 0
 
@@ -39,11 +55,24 @@ object Tile {
 
     count
   }
+
+  /**
+   * Get all bombs around specified tile. Used to write number on empty tiles.
+   * @param x tile horizontal index
+   * @param y tile vertical index
+   * @return number of bombs
+   */
   def getBombsAround(x: Int, y: Int): Int = {
     if (Tile.getArray(x)(y).isBomb()) return -1
     getXAround(x,y,AroundType.Bomb)
   }
   def getFlagsAround(x: Int, y: Int): Int = getXAround(x,y,AroundType.Flag)
+
+  /**
+   * Used at the start of a game to generate the tile array
+   * You need to set "Window.carrex" and "Window.carrey" before executing this function
+   * @param bombs
+   */
   def startupTiles(bombs: Int): Unit = {
     this.bombCount = if (bombs > Window.carrex * Window.carrey) Window.carrex * Window.carrey else bombs
     val bombPos: Array[Int] = Array.fill(bombs)(-1) // Array[Int] of size bombs filled with -1
@@ -104,6 +133,11 @@ object Tile {
     println(str)
     println("Bombcount : " + bombCount)
   }
+
+  /**
+   * Checks if all bombs are flagged (no remaining flags) and all other tiles are not hidden.
+   * @return Boolean : game won or not
+   */
   def checkIfWon(): Boolean = {
     if (getRemainingFlags() != 0) return false
 
@@ -182,6 +216,11 @@ class Tile(val x: Int, val y: Int, typeOfTile: TileType) {
 
     true
   }
+
+  /**
+   * If you click an empty tile that says "1" and you have one flag around, the program clicks every tile around it. -> classic minesweeper feature
+   * @return
+   */
   private def checkFlagsBombsAround(): Boolean = {
     val bombsAround: Int = Tile.getBombsAround(x,y)
     val flagsAround: Int = Tile.getFlagsAround(x,y)
