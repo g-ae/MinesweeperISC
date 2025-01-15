@@ -1,7 +1,8 @@
 # MinesweeperISC
 This project is our implementation of the classic Minesweeper game, developed as part of the 101.1 class at the HES-SO Valais Wallis. \
 Developed by Lucas Henry and Gonçalo Esteves.\
-The goal was to create a functional Minesweeper game with varying difficulties.
+The goal was to create a functional Minesweeper game with varying difficulties. \
+No images were used in the program: bombs, flags, menu options, etc. were all made using pixel art.
 
 ## Key features
 - Choose between Beginner (10x10 grid, 10 bombs), Medium (20x15 grid, 45 bombs) or Hard (30x15 grid, 90 bombs). All these values can easily be changed in the code.
